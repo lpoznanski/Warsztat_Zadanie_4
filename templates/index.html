@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <h1>Pomyśl liczbę od 0 do 1000, a ja ją zgadnę w max 10 próbach</h1>
+  <form action="/" method="POST">
+    <label>
+      Zgaduję: {{ guess }}
+    </label>
+    </br>
+    </br>
+    <button name="button" value="1">Not enough
+<!--      <input type="hidden" name="min" value={{ guess }}>-->
+    </button>
+    <button name="button" value="2">Too much</button>
+    <button name="button" value="3">You win!</button>
+  </form>
+</body>
+</html>
