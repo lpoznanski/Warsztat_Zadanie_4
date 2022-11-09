@@ -1,99 +1,115 @@
-from flask import Flask, render_template, request
+from flask import Flask, request
+
 
 app = Flask(__name__)
 
 
-@app.route("/", methods = ["POST", "GET"])
-def game():
-    min = 0
-    max = 1000
-    guess = int((max - min) / 2) + min
+HTML_START = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Guess The Number</title>
+</head>
+<body>
+<h1>Imagine a number between 0 and 1000</h1>
+<form action="" method="POST">
+    <input type="hidden" name="min" value="{}"></input>
+    <input type="hidden" name="max" value="{}"></input>
+    <input type="submit" value="OK">
+</form>
+</body>
+</html>
+"""
 
-    if request.method == "POST":
-        answer = request.form["button"]
-        if answer == "3":
-            return "Hooray! I won!"
-        elif answer == "2":
-            max = guess
-            guess = int((max - min) / 2) + min
-            return render_template("index.html", guess=guess)
-        else:
-            min = guess
-            guess = int((max - min) / 2) + min
-            return render_template("index.html", guess=guess)
+
+HTML = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Guess The Number</title>
+</head>
+<body>
+<h1>It is number {guess}</h1>
+<form action="" method="POST">
+    <input type="submit" name="user_answer" value="too big">
+    <input type="submit" name="user_answer" value="too small">
+    <input type="submit" name="user_answer" value="you win">
+    <input type="submit" name="user_answer" value="you won">
+    <input type="hidden" name="min" value="{min}">
+    <input type="hidden" name="max" value="{max}">
+    <input type="hidden" name="guess" value="{guess}">
+</form>
+</body>
+</html>
+"""
+
+
+HTML_WIN = """<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Guess The Number</title>
+</head>
+<body>
+<h1>Hooray! I guessed! Your number is {guess}</h1>
+</body>
+</html>
+"""
+
+
+@app.route("/", methods=["GET", "POST"])
+def guess_the_number():
+    if request.method == "GET":
+        return HTML_START.format(0, 1000)
     else:
-        return render_template("index.html", guess=guess)
+        min_number = int(request.form.get("min"))
+        max_number = int(request.form.get("max"))
+        user_answer = request.form.get("user_answer")
+        guess = int(request.form.get("guess", 500))
+
+        if user_answer == "too big":
+            max_number = guess
+        elif user_answer == "too small":
+            min_number = guess
+        elif user_answer == "you won":
+            return HTML_WIN.format(guess=guess)
+
+        guess = (max_number - min_number) // 2 + min_number
+
+        return HTML.format(guess=guess, min=min_number, max=max_number)
 
 
-
-
-        # else:
-        #     return render_template("index.html", guess=guess)
-# def form():
-#     min = 0
-#     max = 1000
-#     guess = int((max - min) / 2) + min
-
+if __name__ == '__main__':
+    app.run()
+# from flask import Flask, render_template, request
+#
+# app = Flask(__name__)
 #
 #
-#     html = """
-#     <html>
-#         <h1>Pomyśl liczbę od 0 do 1000, a ja ją zgadnę w max 10 próbach</h1>
-#         </br>
-#         <form action="/" method="POST">
-#             <label>
-#             Zgaduję: {{ guess }}
-#             </label>
-#             </br>
-#             </br>
-#             <button type="submit">Not enough</button>
-#             <button type="submit">Too much</button>
-#             <button type="submit">You win!</button>
-#         </form>
-#     </html>
-#     """
+# @app.route("/", methods = ["POST", "GET"])
+# def game():
 #
-#
-#
-#
-    # if request.method == "POST":
-    #     answer = request.form["answer"]
-    #         if answer == "You win!":
-    #             print("Wygrałeś!")
-    #
-    #         elif answer == "za dużo":
-    #             max = guess
-    #         elif answer == "za mało":
-    #             min = guess
-    #         else:
-    #             print("nie oszukuj!")
-
-    # return html
-
-if __name__ == "__main__":
-    app.run(debug=True, port=5000)
-
-
-# print("""
-# Pomyśl liczbę od 0 do 1000,
-# a ja ją zgadnę w max 10 próbach
-# """)
-# min = 0
-# max = 1000
-# while True:
-#     guess = int((max - min) / 2) + min
-#     print(f"Zgaduję: {guess}")
-#     answer = input("""Wpisz
-#   za dużo
-#   za mało
-#   lub zgadłeś
-#   :""")
-#     if answer == "zgadłeś":
-#         print("Wygrałem!")
-#         break
-#     elif answer == "za dużo":
-#         max = guess
-#     elif answer == "za mało":
-#         min = guess
+#     if request.method == "GET":
+#         return render_template("index.html")
 #     else:
-#         print("nie oszukuj!")
+#         min = int(request.form.get("min"))
+#         max = int(request.form.get("max"))
+#         answer = request.form.get("answer")
+#         guess = int(request.form.get("guess", 500))
+#
+#         if answer == "Too much":
+#             max = guess
+#         elif answer == "Not enough":
+#             min = guess
+#         elif answer == "You won!":
+#             return "Hooray! I won!"
+#
+#         guess = (max - min) // 2 + min
+#
+#         return render_template("html.html".format(guess=guess, min=min, max=max))
+#
+# if __name__ == "__main__":
+#     app.run(debug=True, port=5000)
+#

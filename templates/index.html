@@ -2,21 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Guess the number!</title>
 </head>
 <body>
-  <h1>Pomyśl liczbę od 0 do 1000, a ja ją zgadnę w max 10 próbach</h1>
+  <h1>Think a number from 0 to 1000 and I'll guess it in max 10 tries</h1>
   <form action="/" method="POST">
-    <label>
-      Zgaduję: {{ guess }}
-    </label>
-    </br>
-    </br>
-    <button name="button" value="1">Not enough
-<!--      <input type="hidden" name="min" value={{ guess }}>-->
-    </button>
-    <button name="button" value="2">Too much</button>
-    <button name="button" value="3">You win!</button>
+    <input hidden name="min" value=0>
+    <input hidden name="max" value=1000>
+    <input type="submit" value="OK">
   </form>
 </body>
 </html>
